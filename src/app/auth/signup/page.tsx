@@ -1,15 +1,12 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function SignupPage() {
-  const router = useRouter();
+export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function handleSignup() {
-    localStorage.setItem("auth", "true");
-    router.push("/dashboard");
+    console.log("HEHEHEH");
   }
 
   return (

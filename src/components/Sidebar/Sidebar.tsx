@@ -1,13 +1,11 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 export default function Sidebar() {
-  const router = useRouter();
 
-  function handleLogout() {
-    localStorage.removeItem("auth");
-    router.push("/auth/login");
+  async function handleLogout() {
+    await signOut({ callbackUrl: "/auth/login" });
   }
 
   return (
@@ -15,13 +13,19 @@ export default function Sidebar() {
       <h2 className="text-xl font-bold">Dashboard</h2>
       <nav className="mt-4">
         <ul>
-        <li>
-            <Link href="/dashboard" className="block py-2 px-4 hover:bg-gray-700">
+          <li>
+            <Link
+              href="/dashboard"
+              className="block py-2 px-4 hover:bg-gray-700"
+            >
               Dashboard
             </Link>
           </li>
           <li>
-            <Link href="/dashboard/home" className="block py-2 px-4 hover:bg-gray-700">
+            <Link
+              href="/dashboard/home"
+              className="block py-2 px-4 hover:bg-gray-700"
+            >
               Home
             </Link>
           </li>
