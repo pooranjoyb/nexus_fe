@@ -1,37 +1,79 @@
 "use client";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Enter a valid email." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+});
+
 
 export default function Signup() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  function handleSignup() {
-    console.log("HEHEHEH");
-  }
-
+  const router = useRouter();
+    const form = useForm({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        email: "",
+        password: "",
+      },
+    });
+  
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+      console.log("signup Logic")
+    };
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold">Sign Up</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="p-2 border rounded my-2"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="p-2 border rounded my-2"
-      />
-      <button className="p-2 bg-green-500 text-white rounded" onClick={handleSignup}>
-        Sign Up
-      </button>
-      <p className="mt-2">
-        Already have an account? <a href="/auth/login" className="text-blue-500">Login</a>
-      </p>
+    <div className="max-w-md mx-auto">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-screen flex flex-col justify-center">
+          <div className="border-[.5px] shadow-sm rounded-lg border-slate-10 p-6 space-y-6">
+            <div className="scroll-m-20 text-xl font-bold tracking-tight">
+              Signup
+              <div className="text-sm font-semibold text-muted-foreground">Dive into Nexus to reach beyond limits.</div>
+            </div>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="your@email.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" autoComplete="on" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full">Signup</Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }

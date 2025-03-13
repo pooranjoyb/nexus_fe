@@ -10,7 +10,7 @@ const Dashboard = async () => {
   }
 
   return (
-    <div>
+    <div className="">
       <h1 className="text-xl font-bold">Welcome, {session.user?.email}!</h1>
       <h1 className="text-2xl font-bold">Dashboard</h1>
     </div>

@@ -1,19 +1,39 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Enter a valid email." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+});
 
 export default function Login() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const res = await signIn("credentials", {
-      email,
-      password,
+      email: values.email,
+      password: values.password,
       redirect: false,
     });
 
@@ -22,36 +42,47 @@ export default function Login() {
     } else {
       alert("Invalid credentials");
     }
-  }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <form onSubmit={handleSubmit} className="flex flex-col">
-        <h1 className="text-2xl font-bold">Login</h1>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="p-2 border rounded my-2"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="p-2 border rounded my-2"
-        />
-        <button className="p-2 cursor-pointer bg-blue-500 text-white rounded" type="submit">
-          Login
-        </button>
-      </form>
-      <p className="mt-2">
-        Don&apos;t have an account?{" "}
-        <a href="/auth/signup" className="text-blue-500">
-          Sign up
-        </a>
-      </p>
+    <div className="max-w-md mx-auto">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-screen flex flex-col justify-center">
+          <div className="border-[.5px] shadow-sm rounded-lg border-slate-10 p-6 space-y-6">
+            <div className="scroll-m-20 text-xl font-bold tracking-tight">
+              Login
+            <div className="text-sm font-semibold text-muted-foreground">Enter your credentials to dive into Nexus.</div>
+            </div>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="your@email.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" autoComplete="on" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full">Login</Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
