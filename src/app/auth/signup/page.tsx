@@ -1,6 +1,6 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+// import { useRouter } from "next/navigation";
+// import { signIn } from "next-auth/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,7 +23,6 @@ const formSchema = z.object({
 
 export default function Signup() {
 
-  const router = useRouter();
     const form = useForm({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -33,7 +32,7 @@ export default function Signup() {
     });
   
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-      console.log("signup Logic")
+      console.log("signup Logic", values);
     };
   return (
     <div className="max-w-md mx-auto">
