@@ -1,14 +1,26 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Dashboard",
-};
-const Dashboard = async () => {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "@/hooks/useSession";
+
+const Dashboard = () => {
+  const router = useRouter();
+  const { user, isLoading } = useSession();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.replace("/auth/login");
+    }
+  }, [user, isLoading, router]);
+
+  if (isLoading) {
+    return <p>Loading session...</p>;
+  }
 
   return (
-    <div className="">
-      <h1 className="text-xl font-bold">Welcome, 
-        </h1>
+    <div>
+      <h1 className="text-xl font-bold">Welcome, {user?.user?.email}</h1>
       <h1 className="text-2xl font-bold">Dashboard</h1>
     </div>
   );

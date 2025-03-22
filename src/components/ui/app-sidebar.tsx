@@ -12,7 +12,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { signOut } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 const items = [
     {
@@ -39,7 +39,8 @@ const items = [
 
 export function AppSidebar() {
     async function handleLogout() {
-        await signOut({ callbackUrl: "/auth/login" });
+        localStorage.removeItem('user');
+        redirect('/auth/login');
     }
 
     return (
@@ -64,7 +65,9 @@ export function AppSidebar() {
 
                 </SidebarGroup>
             </SidebarContent>
-            <Button className="cursor-pointer w-auto m-3 " onClick={handleLogout}>
+            <Button className="cursor-pointer w-auto m-3 " 
+            onClick={handleLogout}
+            >
                 <LucideLogOut /> Logout
             </Button>
         </Sidebar>

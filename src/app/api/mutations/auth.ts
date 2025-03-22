@@ -6,6 +6,7 @@ import axiosInstance from "@/helpers/axiosInstance";
 const login = async (payload: { username: string; password: string }): Promise<User> => {
   try {
     const { data } = await axiosInstance.post<User>("/auth/login", payload);
+    localStorage.setItem("user", JSON.stringify(data));
     return data;
   } catch {
     console.error("Login error:");

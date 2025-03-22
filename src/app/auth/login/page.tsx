@@ -91,7 +91,11 @@ export default function Login() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button
+              disabled={loginMutation?.isPending}
+              type="submit"
+              className="w-full"
+            >
               Login
             </Button>
             <div className="text-sm text-center">
