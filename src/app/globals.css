@@ -119,10 +119,32 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+.radial1 {
+  position: absolute;
+  width: 513px;
+  height: 513px;
+  left: -184px;
+  z-index: -1;
+  top: 18px;
+  background: rgba(1, 186, 239, 0.15);
+  filter: blur(200px);
+}
+
+.radial2 {
+  position: absolute;
+  width: 513px;
+  height: 513px;
+  right: 3rem;
+  bottom: 1px;
+  background: rgba(187, 32, 187, 0.15);
+  filter: blur(500px)
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

@@ -1,6 +1,5 @@
 "use client";
-// import { useRouter } from "next/navigation";
-// import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,6 +35,8 @@ export default function Signup() {
     };
   return (
     <div className="max-w-md mx-auto">
+      <div className="radial1"></div>
+      <div className="radial2"></div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-screen flex flex-col justify-center">
           <div className="border-[.5px] shadow-sm rounded-lg border-slate-10 p-6 space-y-6">
@@ -70,6 +71,15 @@ export default function Signup() {
               )}
             />
             <Button type="submit" className="w-full">Signup</Button>
+            <div className="text-sm text-center" >
+              Already have an account?{" "}
+              <Link
+                href="/auth/login"
+                className="text-blue-700"
+              >
+                Login
+              </Link>
+            </div>
           </div>
         </form>
       </Form>

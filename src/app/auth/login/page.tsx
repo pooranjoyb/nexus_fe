@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import { z } from "zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -14,53 +14,60 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useLoginMutation } from "@/app/api/mutations/auth";
 
 const formSchema = z.object({
-  email: z.string().email({ message: "Enter a valid email." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters." }),
+  password: z
+    .string()
+    .min(3, { message: "Password must be at least 6 characters." }),
 });
 
 export default function Login() {
   const router = useRouter();
+  const loginMutation = useLoginMutation();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const res = await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirect: false,
+  const onSubmit = async (payload: z.infer<typeof formSchema>) => {
+    loginMutation.mutate(payload, {
+      onSuccess: () => {
+        router.push("/dashboard");
+      },
     });
-
-    if (res?.ok) {
-      router.push("/dashboard");
-    } else {
-      alert("Invalid credentials");
-    }
   };
 
   return (
     <div className="max-w-md mx-auto">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full h-screen flex flex-col justify-center">
+        <div className="radial1"></div>
+        <div className="radial2"></div>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full h-screen flex flex-col justify-center"
+        >
           <div className="border-[.5px] shadow-sm rounded-lg border-slate-10 p-6 space-y-6">
             <div className="scroll-m-20 text-xl font-bold tracking-tight">
               Login
-            <div className="text-sm font-semibold text-muted-foreground">Enter your credentials to dive into Nexus.</div>
+              <div className="text-sm font-semibold text-muted-foreground">
+                Enter your credentials to dive into Nexus.
+              </div>
             </div>
             <FormField
               control={form.control}
-              name="email"
+              name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="your@email.com" {...field} />
+                    <Input type="text" placeholder="bislerypandey" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -73,13 +80,26 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" autoComplete="on" {...field} />
+                    <Input
+                      placeholder=""
+                      type="password"
+                      autoComplete="on"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">Login</Button>
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+            <div className="text-sm text-center">
+              Don&apos; have an account?{" "}
+              <Link href="/auth/signup" className="text-blue-700">
+                Signup
+              </Link>
+            </div>
           </div>
         </form>
       </Form>

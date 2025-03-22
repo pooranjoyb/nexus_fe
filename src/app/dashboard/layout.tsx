@@ -1,17 +1,8 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "../utils/authOptions";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import Image from 'next/image';
 
 export default async function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect("/auth/login");
-  }
-
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
