@@ -8,7 +8,6 @@ import axios, { AxiosError } from "axios";
 const login = async (payload: { username: string; password: string }): Promise<User> => {
   try {
     const { data } = await axiosInstance.post<User>("/auth/login", payload);
-    localStorage.setItem("user", JSON.stringify(data));
     return data;
   } catch {
     console.error("Login error:");
@@ -23,7 +22,7 @@ const register = async (payload: { username: string; password: string }): Promis
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError;
-      console.error("Register error:", axiosError.response?.data || axiosError.message);
+      console.error("Register error:", axiosError.response?.data ?? axiosError.message);
       throw axiosError;
     } else {
       console.error("Register error:", error);

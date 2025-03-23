@@ -2,19 +2,19 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "@/hooks/useSession";
+import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user, isLoading } = useSession();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!loading && !user) {
       router.replace("/auth/login");
     }
-  }, [user, isLoading, router]);
+  }, [user, loading, router]);
 
-  if (isLoading) {
+  if (loading) {
     return <p>Loading session...</p>;
   }
 

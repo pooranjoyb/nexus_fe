@@ -101,7 +101,7 @@ export default function Signup() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button disabled={registerMutation?.isPending} type="submit" className="w-full">
               Signup
             </Button>
             <div className="text-sm text-center">

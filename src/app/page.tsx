@@ -2,11 +2,11 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "@/hooks/useSession";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LayoutPage() {
   const router = useRouter();
-  const data = useSession();
+  const data = useAuth();
 
   useEffect(() => {
     if (!data?.user) {

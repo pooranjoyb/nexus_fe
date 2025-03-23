@@ -14,6 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+
+import { useAuth } from "@/hooks/useAuth";
 import { useLoginMutation } from "@/app/api/mutations/auth";
 
 const formSchema = z.object({
@@ -22,12 +24,14 @@ const formSchema = z.object({
     .min(3, { message: "Username must be at least 3 characters." }),
   password: z
     .string()
-    .min(3, { message: "Password must be at least 6 characters." }),
+    .min(3, { message: "Password must be at least 3 characters." }),
 });
 
 export default function Login() {
   const router = useRouter();
   const loginMutation = useLoginMutation();
+  const { setUser } = useAuth();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,7 +42,8 @@ export default function Login() {
 
   const onSubmit = async (payload: z.infer<typeof formSchema>) => {
     loginMutation.mutate(payload, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        setUser(data);
         router.push("/dashboard");
       },
     });
@@ -67,7 +72,7 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="pooranjoyb" {...field} />
+                    <Input type="text" placeholder="nexususer" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -81,7 +86,7 @@ export default function Login() {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder=""
+                      placeholder="secret"
                       type="password"
                       autoComplete="on"
                       {...field}
