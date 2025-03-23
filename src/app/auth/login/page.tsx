@@ -67,7 +67,7 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="bislerypandey" {...field} />
+                    <Input type="text" placeholder="pooranjoyb" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,7 +100,7 @@ export default function Login() {
             </Button>
             <div className="text-sm text-center">
               Don&apos; have an account?{" "}
-              <Link href="/auth/signup" className="text-blue-700">
+              <Link href="/auth/signup" className="text-blue-700 underline">
                 Signup
               </Link>
             </div>

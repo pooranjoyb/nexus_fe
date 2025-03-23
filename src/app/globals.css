@@ -126,7 +126,7 @@
   left: -184px;
   z-index: -1;
   top: 18px;
-  background: rgba(1, 186, 239, 0.15);
+  background: rgba(1, 186, 239, 0.20);
   filter: blur(200px);
 }
 
@@ -136,7 +136,7 @@
   height: 513px;
   right: 3rem;
   bottom: 1px;
-  background: rgba(187, 32, 187, 0.15);
+  background: rgba(187, 32, 187, 0.20);
   filter: blur(500px)
 }
 
