@@ -9,7 +9,7 @@ import { Resume } from "@/app/types/resume";
 import UploadResumeDialog from "@/components/custom/UploadResumeDialog";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useFetchResumeQuery } from "@/app/api/mutations/resume";
+import { useFetchResumeQuery } from "@/app/api/resume";
 
 interface CellProps<TData, TValue> {
   info: CellContext<TData, TValue>;

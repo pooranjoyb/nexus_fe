@@ -1,5 +1,5 @@
 "use client"
-import { Home, LayoutDashboard, LucideLogOut, UploadCloud, SearchCheck } from "lucide-react"
+import { LayoutDashboard, LucideLogOut, UploadCloud, SearchCheck } from "lucide-react"
 import Link from "next/link"
 import { Button } from "./button"
 import {
@@ -19,11 +19,6 @@ const items = [
         title: "Dashboard",
         url: "/dashboard",
         icon: LayoutDashboard,
-    },
-    {
-        title: "Home",
-        url: "/dashboard/home",
-        icon: Home,
     },
     {
         title: "Upload Resume",

@@ -43,7 +43,7 @@ const UploadResumeDialog: React.FC<UploadResumeDialogProps> = ({
           {resume ? (
             <div className="my-4">
               You are about to use Nexus divine powers to analyse{" "}
-              <strong className="text-green-600">{resume.filename}</strong>
+              <strong className="text-green-600">{resume?.file_name ?? "Unknown File Name"}</strong>
             </div>
           ) : (
             <div className="my-4">Please select a resume to analyse.</div>

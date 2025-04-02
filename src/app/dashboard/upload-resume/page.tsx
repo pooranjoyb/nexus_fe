@@ -7,7 +7,7 @@ import { Upload, FileSpreadsheetIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from 'next/navigation'; 
 
-import { useUploadMutation } from "@/app/api/mutations/resume";
+import { useUploadMutation } from "@/app/api/resume";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function UploadResume() {

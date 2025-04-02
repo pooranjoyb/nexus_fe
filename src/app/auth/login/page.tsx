@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useLoginMutation } from "@/app/api/mutations/auth";
+import { useLoginMutation } from "@/app/api/auth";
 
 const formSchema = z.object({
   username: z
