@@ -70,7 +70,7 @@ export default function Login() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Username/email</FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="nexususer" {...field} />
                   </FormControl>

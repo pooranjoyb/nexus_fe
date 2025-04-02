@@ -1,5 +1,7 @@
 "use client";
 
+// import Image from "next/image";
+
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,12 +20,8 @@ const Dashboard = () => {
     return <p>Loading session...</p>;
   }
 
-  return (
-    <div>
-      <h1 className="text-xl font-bold">Welcome, {user?.user?.email}</h1>
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-    </div>
-  );
+  return <>
+  </>;
 };
 
 export default Dashboard;

@@ -8,6 +8,9 @@ import { ColumnDef, CellContext } from "@tanstack/react-table";
 import { Resume } from "@/app/types/resume";
 import UploadResumeDialog from "@/components/custom/UploadResumeDialog";
 
+import { useAuth } from "@/hooks/useAuth";
+import { useFetchResumeQuery } from "@/app/api/mutations/resume";
+
 interface CellProps<TData, TValue> {
   info: CellContext<TData, TValue>;
 }
@@ -16,30 +19,12 @@ type CustomColumnDef<TData> = ColumnDef<TData> & {
   align?: "left" | "center" | "right";
 };
 
-const resumes = [
-  {
-    resume_id: "123",
-    filename: "Pooranjoy_Resume.pdf",
-    created_at: "2023-10-26T10:00:00Z",
-    status: "processed",
-  },
-  {
-    resume_id: "345",
-    filename: "JatinSharma_CV.pdf",
-    created_at: "2023-10-25T15:30:00Z",
-    status: "pending",
-  },
-  {
-    resume_id: "234",
-    filename: "Debarun_Resume.pdf",
-    created_at: "2023-10-24T09:45:00Z",
-    status: "error",
-  },
-];
-
 export default function AnalyseResume() {
   const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
   const [analyseDialog, setAnalyseDialog] = useState<boolean>(false);
+
+  const { user } = useAuth();
+  const {data, isFetching} = useFetchResumeQuery(user?.user?._id ?? "");
 
   const CellRenderer = <TData extends Resume, TValue>({
     info,
@@ -102,15 +87,28 @@ export default function AnalyseResume() {
       size: 10,
     },
     {
-      accessorKey: "filename",
+      accessorKey: "file_name",
       header: "Filename",
       cell: (info) => <CellRenderer info={info} />,
       size: 100,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "uploaded_at",
       header: "Uploaded",
-      cell: (info) => <CellRenderer info={info} />,
+      cell: (info) => {
+        const rawDate = info.getValue() as string;
+        const formattedDate = new Date(rawDate).toLocaleString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        });
+    
+        return <span>{formattedDate}</span>;
+      },
       size: 100,
       align: "center",
     },
@@ -137,7 +135,8 @@ export default function AnalyseResume() {
       </h1>
       <DataTable
         columns={columns}
-        data={resumes}
+        data={data?.list ?? []}
+        loading={isFetching}
         sortableColumns={["filename"]}
         search={{
           searchTitle: "Find your resumes",
