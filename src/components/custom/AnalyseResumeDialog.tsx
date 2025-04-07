@@ -12,25 +12,33 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Resume } from "@/app/types/resume";
 
-interface UploadResumeDialogProps {
+import { useRouter } from "next/navigation";
+
+interface AnalyseResumeDialogProps {
   resume?: Resume | null;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const UploadResumeDialog: React.FC<UploadResumeDialogProps> = ({
+const AnalyseResumeDialog: React.FC<AnalyseResumeDialogProps> = ({
   resume,
   isOpen,
   onClose,
 }) => {
+  const router = useRouter();
+
   const [jobDescription, setJobDescription] = useState<string>("");
 
   const handleAnalyseResume = async () => {
+    if (!resume?._id) return;
+  
     console.log(jobDescription);
     setJobDescription("");
-    onClose();
-  };
+    router.push(`/dashboard/analyse-resume/${resume?._id}`);
 
+    onClose();
+    
+  };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl w-full p-0 overflow-hidden [&>button]:hidden">
@@ -81,4 +89,4 @@ const UploadResumeDialog: React.FC<UploadResumeDialogProps> = ({
   );
 };
 
-export default UploadResumeDialog;
+export default AnalyseResumeDialog;

@@ -42,6 +42,8 @@ const upload = async ({ resume, userId }: UploadPayload): Promise<Resume> => {
   }
 };
 
+
+
 const listResume = async (userId : string): Promise<ListResumeResponse> => {
   try {
     const { data } = await axiosInstance.get<ListResumeResponse>(

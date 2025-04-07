@@ -41,15 +41,10 @@ export default function UploadResume() {
           userId: user?.user?._id ?? "",
         },
         {
-          onSuccess: (data) => {
+          onSuccess: () => {
             setSelectedFile(null);
             if (fileInputRef.current) {
               fileInputRef.current.value = "";
-            }
-            if(data?.resume_id){
-              router.push(`/dashboard/analyse-resume/${data?.resume_id}`);
-            } else {
-              toast.error("Resume upload successful, but ID retrieval failed.");
             }
           },
         }
