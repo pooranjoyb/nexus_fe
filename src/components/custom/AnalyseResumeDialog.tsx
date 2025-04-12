@@ -16,8 +16,6 @@ import { Resume } from "@/app/types/resume";
 import { useRouter } from "next/navigation";
 import { useAnalyseResumeMutation } from "@/app/api/resume";
 import { useAuth } from "@/hooks/useAuth";
-import toast from "react-hot-toast";
-
 
 interface AnalyseResumeDialogProps {
   resume?: Resume | null;
@@ -47,7 +45,6 @@ const AnalyseResumeDialog: React.FC<AnalyseResumeDialogProps> = ({
       {
         onSuccess: () => {
           router.push(`/dashboard/analyse-resume/${resume?.resume_id}`);
-          toast.success("Resume Analysed Successfully!");
           setJobDescription("");
           onClose();
         },
