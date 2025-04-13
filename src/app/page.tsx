@@ -6,15 +6,17 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function LayoutPage() {
   const router = useRouter();
-  const data = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (!data?.user) {
-      router.replace("/auth/login");
-    } else {
-      router.replace("/dashboard");
+    if (!loading) {
+      if (!user) {
+        router.replace("/auth/login");
+      } else {
+        router.replace("/dashboard");
+      }
     }
-  }, [data?.user, router]);
+  }, [user, loading, router]);
 
   return null;
 }
