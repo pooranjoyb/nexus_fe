@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { FileSearch } from "lucide-react";
 import { ColumnDef, CellContext } from "@tanstack/react-table";
 import { Resume } from "@/app/types/resume";
-import UploadResumeDialog from "@/components/custom/UploadResumeDialog";
+import AnalyseResumeDialog from "@/components/custom/AnalyseResumeDialog";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useFetchResumeQuery } from "@/app/api/resume";
@@ -143,7 +143,7 @@ export default function AnalyseResume() {
           searchPlaceholder: "Type to search for your uploaded resume",
         }}
       />
-      <UploadResumeDialog
+      <AnalyseResumeDialog
         isOpen={analyseDialog}
         onClose={() => {
           setAnalyseDialog(!analyseDialog);

@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Resume } from "@/app/types/resume";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Resume, RootResume } from "@/app/types/resume";
 import toast from "react-hot-toast";
 import axiosInstance from "@/helpers/axiosInstance";
 import axios from "axios";
@@ -13,6 +13,12 @@ interface UploadPayload {
 interface ListResumeResponse {
   count: number;
   list: Resume[];
+}
+
+interface AnalyseResumePayload {
+  user_id: string;
+  resume_id: string;
+  job_description: string;
 }
 
 // apis
@@ -42,12 +48,26 @@ const upload = async ({ resume, userId }: UploadPayload): Promise<Resume> => {
   }
 };
 
-const listResume = async (userId : string): Promise<ListResumeResponse> => {
+const analyse = async (payload: AnalyseResumePayload): Promise<RootResume> => {
+  try {
+    const { data } = await axiosInstance.post<RootResume>("/resumes/analyze", payload);
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error ?? "Analysis Failed");
+    } else {
+      console.log("Analysis Failed:", error);
+      throw new Error("Analysis Failed");
+    }
+  }
+};
+
+const listResume = async (userId: string): Promise<ListResumeResponse> => {
   try {
     const { data } = await axiosInstance.get<ListResumeResponse>(
       `/resumes/all/${userId}`,
       {
-        headers: getHeaders()
+        headers: getHeaders(),
       }
     );
     return data;
@@ -61,14 +81,32 @@ const listResume = async (userId : string): Promise<ListResumeResponse> => {
   }
 };
 
-// queries 
-export const useFetchResumeQuery = (
-  userId: string,
-) => {
+// queries
+export const useFetchResumeQuery = (userId: string) => {
   return useQuery({
     queryKey: ["resume"],
     queryFn: () => listResume(userId),
     placeholderData: (prev) => prev,
+  });
+};
+
+export const useFetchResumeDataQuery = (resumeId: string | undefined) => {
+  return useQuery({
+    queryKey: ["resume-data", resumeId],
+    queryFn: async () => {
+      if (!resumeId) {
+        return null;
+      }
+      const payload: AnalyseResumePayload = {
+        user_id: '',
+        resume_id: resumeId,
+        job_description: '',
+      };
+      return await analyse(payload);
+    },
+    placeholderData: (prev) => prev,
+    staleTime: Infinity,
+    enabled: !!resumeId,
   });
 };
 
@@ -82,6 +120,21 @@ export const useUploadMutation = () => {
     onError: (error: Error) => {
       console.log(error);
       toast.error(error?.message ?? "Resume Upload failed. Please try again.");
+    },
+  });
+};
+
+export const useAnalyseResumeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: analyse,
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(['resume-data', variables.resume_id], data);
+      toast.success("Resume Analysis success!");
+    },
+    onError: (error: Error) => {
+      console.log(error);
+      toast.error(error?.message ?? "Resume Analysis Failed.");
     },
   });
 };

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload, FileSpreadsheetIcon } from "lucide-react";
 import toast from "react-hot-toast";
-import { useRouter } from 'next/navigation'; 
 
 import { useUploadMutation } from "@/app/api/resume";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,7 +15,6 @@ export default function UploadResume() {
 
   const uploadMutation = useUploadMutation();
   const { user } = useAuth();
-  const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0)
@@ -41,15 +39,10 @@ export default function UploadResume() {
           userId: user?.user?._id ?? "",
         },
         {
-          onSuccess: (data) => {
+          onSuccess: () => {
             setSelectedFile(null);
             if (fileInputRef.current) {
               fileInputRef.current.value = "";
-            }
-            if(data?.resume_id){
-              router.push(`/dashboard/analyse-resume/${data?.resume_id}`);
-            } else {
-              toast.error("Resume upload successful, but ID retrieval failed.");
             }
           },
         }
