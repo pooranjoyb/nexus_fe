@@ -112,9 +112,11 @@ export const useFetchResumeDataQuery = (resumeId: string | undefined) => {
 
 // mutations
 export const useUploadMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: upload,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['resume'] });
       toast.success("Resume Uploaded successfully!");
     },
     onError: (error: Error) => {

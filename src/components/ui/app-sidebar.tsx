@@ -1,5 +1,5 @@
 "use client"
-import { LayoutDashboard, LucideLogOut, UploadCloud, SearchCheck } from "lucide-react"
+import { LayoutDashboard, LucideLogOut, HistoryIcon, SearchCheck } from "lucide-react"
 import Link from "next/link"
 import { Button } from "./button"
 import {
@@ -21,15 +21,15 @@ const items = [
         icon: LayoutDashboard,
     },
     {
-        title: "Upload Resume",
-        url: "/dashboard/upload-resume",
-        icon: UploadCloud,
-    },
-    {
         title: "Analyse Resume",
         url: "/dashboard/analyse-resume",
         icon: SearchCheck,
-    }
+    },
+    {
+        title: "Upload History",
+        url: "/dashboard/upload-history",
+        icon: HistoryIcon,
+    },
 ]
 
 export function AppSidebar() {

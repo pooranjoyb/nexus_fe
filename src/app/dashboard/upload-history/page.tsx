@@ -1,15 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { DataTable } from "@/components/custom/DataTable";
 import { Badge } from "@/components/ui/badge";
-import { FileSearch } from "lucide-react";
 import { ColumnDef, CellContext } from "@tanstack/react-table";
 import { Resume } from "@/app/types/resume";
-import { Button } from "@/components/ui/button";
-import AnalyseResumeDialog from "@/components/custom/AnalyseResumeDialog";
-import UploadResumeDialog from "@/components/custom/UploadResumeDialog";
-
 import { useAuth } from "@/hooks/useAuth";
 import { useFetchResumeQuery } from "@/app/api/resume";
 
@@ -21,10 +15,7 @@ type CustomColumnDef<TData> = ColumnDef<TData> & {
   align?: "left" | "center" | "right";
 };
 
-export default function AnalyseResume() {
-  const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
-  const [analyseDialog, setAnalyseDialog] = useState<boolean>(false);
-  const [uploadDialog, setUploadDialog] = useState<boolean>(false);
+export default function UploadHistory() {
 
   const { user } = useAuth();
   const { data, isFetching } = useFetchResumeQuery(user?.user?._id ?? "");
@@ -66,19 +57,8 @@ export default function AnalyseResume() {
           </Badge>
         </div>
       );
-    } else if (info.column.id === "Actions") {
-      return (
-        <div className="flex items-center justify-center">
-          <FileSearch
-            className="cursor-pointer"
-            onClick={() => {
-              setSelectedResume(info.row.original);
-              setAnalyseDialog(!analyseDialog);
-            }}
-          />
-        </div>
-      );
-    }
+    } 
+
     return cellValue;
   };
 
@@ -122,23 +102,13 @@ export default function AnalyseResume() {
       size: 100,
       align: "center",
     },
-    {
-      accessorKey: "Actions",
-      header: "Actions",
-      cell: (info) => <CellRenderer info={info} />,
-      size: 200,
-      align: "center",
-    },
   ];
 
   return (
     <div>
-      <div className="flex justify-between">
         <div className="text-xl font-bold bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-600 text-transparent bg-clip-text animate-gradient drop-shadow-lg mb-5">
-          Analyse your resumes here. All in one place.
+          Resume History. See all previous responses here.
         </div>
-        <Button variant={"success"} onClick={() => setUploadDialog(!uploadDialog)}>Upload Resume</Button>
-      </div>
       <DataTable
         columns={columns}
         data={data?.list ?? []}
@@ -147,19 +117,6 @@ export default function AnalyseResume() {
         search={{
           searchTitle: "Find your resumes",
           searchPlaceholder: "Type to search for your uploaded resume",
-        }}
-      />
-      <AnalyseResumeDialog
-        isOpen={analyseDialog}
-        onClose={() => {
-          setAnalyseDialog(!analyseDialog);
-        }}
-        resume={selectedResume}
-      />
-      <UploadResumeDialog
-        isOpen={uploadDialog}
-        onClose={() => {
-          setUploadDialog(!uploadDialog);
         }}
       />
     </div>
