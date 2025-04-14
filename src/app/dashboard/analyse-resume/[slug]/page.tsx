@@ -18,6 +18,7 @@ import {
   ShoppingBagIcon,
   Zap,
   CheckCircle2,
+  CircleXIcon,
   Text,
   CheckCircle,
   List,
@@ -84,9 +85,7 @@ export default function AnalysedResumePage({
           </div>
         ),
       },
-      data: {
-        return: () => <>{75.34}</>,
-      },
+      data: analysisData?.technical_score?.similarity_score,
       progressColor: "stroke-violet-500",
       cardFooterLeft: "Target Job",
       cardFooterRight: "XXXXXXXXX",
@@ -107,9 +106,7 @@ export default function AnalysedResumePage({
           </div>
         ),
       },
-      data: {
-        return: () => <>{analysisData?.grammar_analysis?.score}</>,
-      },
+      data: analysisData?.grammar_analysis?.score,
       progressColor: "stroke-green-500",
       cardFooterLeft: "Action Needed",
       cardFooterRight: `${analysisData?.grammar_analysis?.recommendations?.length} recommendations`,
@@ -125,7 +122,7 @@ export default function AnalysedResumePage({
       },
       title: "Skills Match",
       description: "Required skills for Data Scientist",
-      score: analysisData?.technical_score?.required_skill_match_percentage,
+      score: analysisData?.technical_score?.section_scores?.skills,
       score_needed: {
         return: () => (
           <Badge variant={"secondary"} className="text-red-500 bg-red-100">
@@ -142,7 +139,7 @@ export default function AnalysedResumePage({
       },
       title: "Experience Match",
       description: "Relevance to Job Description",
-      score: analysisData?.technical_score?.required_skill_match_percentage,
+      score: analysisData?.technical_score?.section_scores?.experience_and_projects,
       score_needed: {
         return: () => (
           <Badge variant={"secondary"} className="text-red-500 bg-red-100">
@@ -344,7 +341,7 @@ export default function AnalysedResumePage({
                 </CardTitle>
                 <CardTitle>
                   <span className="text-3xl">
-                    {analysisData?.overall_score}
+                    {cardData?.data}
                   </span>
                   <span>/100</span>
                 </CardTitle>
@@ -356,15 +353,15 @@ export default function AnalysedResumePage({
                       typeof (
                         cardData?.description as { return: () => JSX.Element }
                       ).return === "function"
-                    ? (
+                      ? (
                         cardData?.description as { return: () => JSX.Element }
                       ).return()
-                    : null}
+                      : null}
                 </CardDescription>
               </CardHeader>
 
               <CircularProgressColorDemo
-                value={analysisData?.overall_score ?? 0}
+                value={cardData?.data ?? 0}
                 size={120}
                 strokeWidth={10}
                 showLabel
@@ -392,7 +389,7 @@ export default function AnalysedResumePage({
                 variant={"secondary"}
                 className="bg-green-100 text-green-700"
               >
-                3/9 skills
+                {analysisData?.technical_score?.required_skills_found_count}/{analysisData?.technical_score?.total_required_skills_in_jd} skills
               </Badge>
               <Badge className="bg-blue-100 text-blue-700">
                 {analysisData?.technical_score?.required_skill_match_percentage}
@@ -411,8 +408,8 @@ export default function AnalysedResumePage({
                       data?.icon !== null &&
                       typeof (data?.icon as { return: () => JSX.Element })
                         .return === "function"
-                    ? (data?.icon as { return: () => JSX.Element }).return()
-                    : null}
+                      ? (data?.icon as { return: () => JSX.Element }).return()
+                      : null}
                   <div className="flex flex-col">
                     <span>{data?.title}</span>
                     <span className="text-slate-500 text-xs ">
@@ -430,10 +427,10 @@ export default function AnalysedResumePage({
                         typeof (
                           data?.score_needed as { return: () => JSX.Element }
                         ).return === "function"
-                      ? (
+                        ? (
                           data?.score_needed as { return: () => JSX.Element }
                         ).return()
-                      : null}
+                        : null}
                   </span>
                 </div>
               </div>
@@ -472,14 +469,14 @@ export default function AnalysedResumePage({
               {analysisData?.technical_score?.required_skills_missing.map(
                 (skill, idx) => (
                   <Badge className="p-1 bg-red-100 text-red-600" key={idx}>
-                    <CheckCircle2 color="#e7000b" />
+                    <CircleXIcon color="#e7000b" />
                     <span>{skill}</span>
                   </Badge>
                 )
               )}
             </div>
 
-            <CardTitle className="text- font-normal mt-3">
+            {/* <CardTitle className="text- font-normal mt-3">
               Justifications
             </CardTitle>
 
@@ -491,7 +488,7 @@ export default function AnalysedResumePage({
                     ?.experience_and_projects
                 }
               </span>
-            </div>
+            </div> */}
             {/* <div className="flex gap-2">
               <CheckCircle className="bg-green-50 text-green-600 rounded-xl p-2 h-10 w-10" />
               <span className="w-full">
@@ -511,12 +508,12 @@ export default function AnalysedResumePage({
               </span>
             </div> */}
 
-            <CardTitle className="text- font-normal mt-3">
+            {/* <CardTitle className="text- font-normal mt-3">
               Job desctiption Responsibilities
             </CardTitle>
             <CardDescription>
               {analysisData?.technical_score?.job_description_responsibilities}
-            </CardDescription>
+            </CardDescription> */}
           </CardContent>
         </Card>
         <Card className="w-1/2">
@@ -542,8 +539,8 @@ export default function AnalysedResumePage({
                       data?.icon !== null &&
                       typeof (data?.icon as { return: () => JSX.Element })
                         .return === "function"
-                    ? (data?.icon as { return: () => JSX.Element }).return()
-                    : null}
+                      ? (data?.icon as { return: () => JSX.Element }).return()
+                      : null}
 
                   <div className="flex flex-col gap-1">
                     <CardTitle>{data?.title}</CardTitle>
@@ -559,31 +556,38 @@ export default function AnalysedResumePage({
                       typeof (
                         data?.score_needed as { return: () => JSX.Element }
                       ).return === "function"
-                    ? (
+                      ? (
                         data?.score_needed as { return: () => JSX.Element }
                       ).return()
-                    : null}
+                      : null}
                 </div>
               </div>
             ))}
           </div>
 
-          <CardContent>
-            <CardDescription>Top Recommendations</CardDescription>
-
-            <div className="my-3 flex flex-col gap-2">
-              {analysisData?.grammar_analysis?.recommendations.map(
-                (recommendations, idx) => (
-                  <div className="flex gap-2" key={idx}>
-                    <CircleAlert className=" text-red-600 bg-red-50 rounded-full h-6 w-6" />
-                    <div className="w-full"> {recommendations}</div>
-                  </div>
-                )
-              )}
-            </div>
-          </CardContent>
         </Card>
+
       </div>
+      <Card className="my-4">
+        <CardContent>
+          <CardTitle>Top Recommendations</CardTitle>
+          <CardDescription className="my-2">Recommendations suggested by Nexus.</CardDescription>
+
+          <div className="my-3 flex flex-col gap-2">
+            {analysisData?.grammar_analysis?.recommendations.map(
+              (recommendations, idx) => (
+                <div className="flex gap-2" key={idx}>
+                  <CircleAlert className=" text-red-600 bg-red-50 rounded-full h-6 w-6" />
+                  <div className="w-full"> {recommendations}</div>
+                </div>
+              )
+            )}
+          </div>
+
+
+
+        </CardContent>
+      </Card>
     </div>
   );
 }
