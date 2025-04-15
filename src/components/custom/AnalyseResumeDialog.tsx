@@ -10,8 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
 import { Resume } from "@/app/types/resume";
+import { Badge } from "@/components/ui/badge";
+import { jobDescriptionRef } from "@/helpers/reference_data";
+import Spinner from "./Spinner";
 
 import { useRouter } from "next/navigation";
 import { useAnalyseResumeMutation } from "@/app/api/resume";
@@ -52,28 +54,52 @@ const AnalyseResumeDialog: React.FC<AnalyseResumeDialogProps> = ({
     );
   };
 
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl w-full p-0 overflow-hidden [&>button]:hidden">
-        <div className="max-h-[80vh] overflow-y-auto p-6">
+      <DialogContent className="w-full max-w-7xl p-0 overflow-hidden [&>button]:hidden">
+        <div className="max-h-[80vh] p-6">
+
           <DialogHeader>
-            <DialogTitle className="text-center font-semibold">
+            <DialogTitle className="text-center font-semibold pb-3">
               Analyse Resume
             </DialogTitle>
           </DialogHeader>
           {resume ? (
-            <div className="my-4">
-              You are about to use Nexus divine powers to analyse{" "}
-              <strong className="text-green-600">
+            <div className="mt-2 mb-1">
+              Analyse <strong className="text-green-600">
                 {resume?.file_name ?? "Unknown File Name"}
-              </strong>
+              </strong> with Nexus divine powers
             </div>
           ) : (
             <div className="my-4">Please select a resume to analyse.</div>
           )}
-          <Label className="py-2 text-md">Enter Job Description : </Label>
+
+          <Label className=" text-normal text-sm">Use Nexus flavoured job descriptions </Label>
+
+          <div className="mt-2 mb-3 flex gap-2 flex-wrap">
+            {
+              jobDescriptionRef?.map((data, idx) => {
+                const isActive: boolean = data?.description === jobDescription;
+                return (
+                  <Badge onClick={() => setJobDescription(data?.description)} key={data?.jobType ?? idx} variant={"secondary"} className={`
+                    cursor-pointer
+                    transition-colors duration-150 ease-in-out
+                    ${isActive
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                    }
+                  `}>
+                    {data?.jobType}
+                  </Badge>
+                );
+              }
+              )}
+          </div>
 
           <Textarea
+            placeholder="Enter Job Description"
+            value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             className="h-60"
           />
@@ -95,12 +121,23 @@ const AnalyseResumeDialog: React.FC<AnalyseResumeDialogProps> = ({
               onClick={handleAnalyseResume}
               disabled={analyseResumeMutation?.isPending}
             >
-              Analyse
+              {
+                analyseResumeMutation?.isPending ? (
+                  <>
+                    <Spinner /> {"Analysing..."}
+                  </>
+                ) :
+                  (
+                    <>
+                      {"Analyse"}
+                    </>
+                  )
+              }
             </Button>
           </DialogFooter>
         </div>
       </DialogContent>
-    </Dialog>
+    </Dialog >
   );
 };
 
