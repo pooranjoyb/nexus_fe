@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   ArrowDown,
   ArrowUp,
-  CircleAlert,
   Code2Icon,
   ShoppingBagIcon,
   Zap,
@@ -26,6 +25,8 @@ import {
   Briefcase,
   Hash,
   Ruler,
+  CircleCheck,
+  CircleX
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
@@ -64,8 +65,8 @@ export default function AnalysedResumePage({
     {
       title: "Overall Score",
       description: "Needs Significant Revision",
-      data: analysisData?.overall_score,
-      progressColor: "stroke-indigo-500",
+      data: Math.round(analysisData?.overall_score),
+      progressColor: "stroke-blue-500",
       cardFooterLeft: "Last Scan",
       cardFooterRight: "XXXXXXXXX",
     },
@@ -85,7 +86,7 @@ export default function AnalysedResumePage({
           </div>
         ),
       },
-      data: analysisData?.technical_score?.similarity_score,
+      data: Math.round(analysisData?.technical_score?.similarity_score),
       progressColor: "stroke-violet-500",
       cardFooterLeft: "Target Job",
       cardFooterRight: "XXXXXXXXX",
@@ -106,10 +107,24 @@ export default function AnalysedResumePage({
           </div>
         ),
       },
-      data: analysisData?.grammar_analysis?.score,
+      data: Math.round(analysisData?.grammar_analysis?.score),
       progressColor: "stroke-green-500",
       cardFooterLeft: "Action Needed",
       cardFooterRight: `${analysisData?.grammar_analysis?.recommendations?.length} recommendations`,
+    },
+    {
+      title: "Responsibility Match",
+      description: {
+        return: () => (
+          <div className="flex gap-3">
+            <span>Key responsibilities match percentage</span>
+          </div>
+        ),
+      },
+      data: analysisData?.technical_score?.key_responsibilities_comparison?.match_percentage,
+      progressColor: "stroke-cyan-500",
+      cardFooterLeft: "Action Needed on ",
+      cardFooterRight: `${analysisData?.technical_score?.key_responsibilities_comparison?.missing_responsibilities.length + analysisData?.technical_score?.key_responsibilities_comparison?.possibly_matched_responsibilities.length} responsibilities`,
     },
   ];
 
@@ -123,13 +138,13 @@ export default function AnalysedResumePage({
       title: "Skills Match",
       description: "Required skills for Data Scientist",
       score: analysisData?.technical_score?.section_scores?.skills,
-      score_needed: {
-        return: () => (
-          <Badge variant={"secondary"} className="text-red-500 bg-red-100">
-            - 5%
-          </Badge>
-        ),
-      },
+      // score_needed: {
+      //   return: () => (
+      //     <Badge variant={"secondary"} className="text-red-500 bg-red-100">
+      //       - 5%
+      //     </Badge>
+      //   ),
+      // },
     },
     {
       icon: {
@@ -139,14 +154,14 @@ export default function AnalysedResumePage({
       },
       title: "Experience Match",
       description: "Relevance to Job Description",
-      score: analysisData?.technical_score?.section_scores?.experience_and_projects,
-      score_needed: {
-        return: () => (
-          <Badge variant={"secondary"} className="text-red-500 bg-red-100">
-            - 5%
-          </Badge>
-        ),
-      },
+      score: Math.round(analysisData?.technical_score?.section_scores?.work_experience_projects),
+      // score_needed: {
+      //   return: () => (
+      //     <Badge variant={"secondary"} className="text-red-500 bg-red-100">
+      //       - 5%
+      //     </Badge>
+      //   ),
+      // },
     },
   ];
 
@@ -382,72 +397,15 @@ export default function AnalysedResumePage({
 
       <div className="flex w-full gap-4">
         <Card className="w-1/2">
-          <CardHeader className="flex w-full justify-between">
-            <CardTitle>Technical Breakdown</CardTitle>
-            <CardTitle className="flex gap-2">
-              <Badge
-                variant={"secondary"}
-                className="bg-green-100 text-green-700"
-              >
-                {analysisData?.technical_score?.required_skills_found_count}/{analysisData?.technical_score?.total_required_skills_in_jd} skills
-              </Badge>
-              <Badge className="bg-blue-100 text-blue-700">
-                {analysisData?.technical_score?.required_skill_match_percentage}
-                % skills
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-
-          <CardContent className="flex flex-col gap-3">
-            {technicalData.map((data, idx) => (
-              <div key={idx} className="flex items-center justify-between">
-                <div className="flex gap-2">
-                  {typeof data?.icon === "string"
-                    ? data?.icon
-                    : typeof data?.icon === "object" &&
-                      data?.icon !== null &&
-                      typeof (data?.icon as { return: () => JSX.Element })
-                        .return === "function"
-                      ? (data?.icon as { return: () => JSX.Element }).return()
-                      : null}
-                  <div className="flex flex-col">
-                    <span>{data?.title}</span>
-                    <span className="text-slate-500 text-xs ">
-                      {data?.description}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <span className="font-semibold">{data?.score}%</span>
-                  <span>
-                    {typeof data?.score_needed === "string"
-                      ? data?.score_needed
-                      : typeof data?.score_needed === "object" &&
-                        data?.score_needed !== null &&
-                        typeof (
-                          data?.score_needed as { return: () => JSX.Element }
-                        ).return === "function"
-                        ? (
-                          data?.score_needed as { return: () => JSX.Element }
-                        ).return()
-                        : null}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-
           <CardContent className="flex flex-col gap-3">
             <CardTitle className="text- font-normal">Skill Analysis</CardTitle>
 
             <div className="flex justify-between">
               <CardDescription>
-                Matched Skills (
-                {analysisData?.technical_score?.required_skills_found_count})
+                Match Scores
               </CardDescription>
-              <CardDescription>
-                Missing Skills (
-                {analysisData?.technical_score?.required_skills_missing.length})
+              <CardDescription className="font-bold">
+                {analysisData?.technical_score?.required_skill_match_percentage} %
               </CardDescription>
             </div>
             <Progress
@@ -457,29 +415,83 @@ export default function AnalysedResumePage({
               }
             />
 
-            <div className="flex flex-wrap gap-2 mt-3">
-              {analysisData?.technical_score?.required_skills_found.map(
-                (skill, idx) => (
-                  <Badge className="p-1 bg-green-100 text-green-600" key={idx}>
-                    <CheckCircle2 color="#3e9392" />
-                    <span>{skill}</span>
-                  </Badge>
-                )
-              )}
-              {analysisData?.technical_score?.required_skills_missing.map(
-                (skill, idx) => (
-                  <Badge className="p-1 bg-red-100 text-red-600" key={idx}>
-                    <CircleXIcon color="#e7000b" />
-                    <span>{skill}</span>
-                  </Badge>
+            <div className="w-full flex gap-2 h-auto">
+              <div className="flex flex-col w-1/2 flex-wrap border p-3 bg-green-50 border-green-600 rounded-xl items-start justify-start gap-2 mt-3">
+                <div>
+                  <CardDescription className="text-green-600 font-semibold my-2">
+                    Matched Skills (
+                    {analysisData?.technical_score?.required_skills_found_count})
+                  </CardDescription>
+                </div>
+                <div>
+                  {analysisData?.technical_score?.required_skills_found.map(
+                    (skill, idx) => (
+                      <Badge className="p-1 m-1 bg-green-100 text-green-600" key={idx}>
+                        <CheckCircle2 color="#3e9392" />
+                        <span>{skill}</span>
+                      </Badge>
+                    )
+                  )}
+                </div>
+              </div>
+              <div className="flex-start w-1/2 flex-wrap border p-3 bg-red-50 border-red-600 rounded-xl items-start justify-start gap-2 mt-3">
+                <div>
+                  <CardDescription className="text-red-600 font-semibold my-2">
+                    Missing Skills (
+                    {analysisData?.technical_score?.required_skills_found_count})
+                  </CardDescription>
+                </div>
+                <div>
+                  {analysisData?.technical_score?.required_skills_missing.map(
+                    (skill, idx) => (
+                      <Badge className="p-1 m-1 bg-red-100 text-red-600" key={idx}>
+                        <CircleXIcon color="#e7000b" />
+                        <span>{skill}</span>
+                      </Badge>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+
+
+            <CardTitle className="text-semibold mt-3">
+              Responsibility Match Details
+            </CardTitle>
+
+            <div className="mt-2 flex flex-col gap-2">
+              {analysisData?.technical_score?.key_responsibilities_comparison?.matched_responsibilities.map(
+                (matched_responsibilities, idx) => (
+                  <div className="flex gap-2 p-1 border border-green bg-green-50 rounded-md" key={idx}>
+                    <CircleCheck color="green" className=" text-red-600 bg-green-50 rounded-full h-6 w-6" />
+                    <div className="w-full "> {matched_responsibilities}</div>
+                  </div>
                 )
               )}
             </div>
 
-            {/* <CardTitle className="text- font-normal mt-3">
-              Justifications
-            </CardTitle>
+            <div className="flex flex-col gap-2">
+              {analysisData?.technical_score?.key_responsibilities_comparison?.possibly_matched_responsibilities.map(
+                (possibly_matched_responsibilities, idx) => (
+                  <div className="flex gap-2 p-1 border border-yellow bg-yellow-50 rounded-md" key={idx}>
+                    <CircleCheck color="orange" className=" text-red-600 bg-green-50 rounded-full h-6 w-6" />
+                    <div className="w-full "> {possibly_matched_responsibilities}</div>
+                  </div>
+                )
+              )}
+            </div>
 
+            <div className="flex flex-col gap-2">
+              {analysisData?.technical_score?.key_responsibilities_comparison?.missing_responsibilities.map(
+                (missing_responsibilities, idx) => (
+                  <div className="flex gap-2 p-1 border border-red bg-red-50 rounded-md" key={idx}>
+                    <CircleX color="red" className=" text-red-600 bg-red-50 rounded-full h-6 w-6" />
+                    <div className="w-full "> {missing_responsibilities}</div>
+                  </div>
+                )
+              )}
+            </div>
+            {/* 
             <div className="flex gap-2">
               <CheckCircle className="bg-green-50 text-green-600 rounded-xl p-2 h-10 w-10" />
               <span className="w-full">
@@ -517,6 +529,62 @@ export default function AnalysedResumePage({
           </CardContent>
         </Card>
         <Card className="w-1/2">
+
+          <CardHeader className="flex w-full justify-between">
+            <CardTitle>Technical Breakdown</CardTitle>
+            <CardTitle className="flex gap-2">
+              <Badge
+                variant={"secondary"}
+                className="bg-green-100 text-green-700"
+              >
+                {analysisData?.technical_score?.required_skills_found_count}/{analysisData?.technical_score?.total_required_skills_in_jd} skills
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-700">
+                {analysisData?.technical_score?.section_scores?.work_experience_projects}
+                % skills
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent className="flex flex-col gap-3">
+            {technicalData.map((data, idx) => (
+              <div key={idx} className="flex items-center justify-between">
+                <div className="flex gap-2">
+                  {typeof data?.icon === "string"
+                    ? data?.icon
+                    : typeof data?.icon === "object" &&
+                      data?.icon !== null &&
+                      typeof (data?.icon as { return: () => JSX.Element })
+                        .return === "function"
+                      ? (data?.icon as { return: () => JSX.Element }).return()
+                      : null}
+                  <div className="flex flex-col">
+                    <span>{data?.title}</span>
+                    <span className="text-slate-500 text-xs ">
+                      {data?.description}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <span className="font-semibold">{data?.score}%</span>
+                  {/* <span>
+                    {typeof data?.score_needed === "string"
+                      ? data?.score_needed
+                      : typeof data?.score_needed === "object" &&
+                        data?.score_needed !== null &&
+                        typeof (
+                          data?.score_needed as { return: () => JSX.Element }
+                        ).return === "function"
+                        ? (
+                          data?.score_needed as { return: () => JSX.Element }
+                        ).return()
+                        : null}
+                  </span> */}
+                </div>
+              </div>
+            ))}
+          </CardContent>
+
           <CardHeader className="flex justify-between">
             <CardTitle>Grammar Breakdown</CardTitle>
             <div className="flex gap-3">
@@ -549,7 +617,7 @@ export default function AnalysedResumePage({
                 </div>
                 <div className="flex gap-2 items-center">
                   <span className="font-bold">{data?.score}%</span>
-                  {typeof data?.score_needed === "string"
+                  {/* {typeof data?.score_needed === "string"
                     ? data?.score_needed
                     : typeof data?.score_needed === "object" &&
                       data?.score_needed !== null &&
@@ -559,7 +627,7 @@ export default function AnalysedResumePage({
                       ? (
                         data?.score_needed as { return: () => JSX.Element }
                       ).return()
-                      : null}
+                      : null} */}
                 </div>
               </div>
             ))}
@@ -568,26 +636,42 @@ export default function AnalysedResumePage({
         </Card>
 
       </div>
-      <Card className="my-4">
-        <CardContent>
-          <CardTitle>Top Recommendations</CardTitle>
-          <CardDescription className="my-2">Recommendations suggested by Nexus.</CardDescription>
+      <div className="w-full flex gap-4">
+        <Card className="my-4 w-1/2">
+          <CardContent>
+            <CardTitle>Top Recommendationssss</CardTitle>
+            <CardDescription className="my-2">Recommendations suggested by Nexus.</CardDescription>
 
-          <div className="my-3 flex flex-col gap-2">
-            {analysisData?.grammar_analysis?.recommendations.map(
-              (recommendations, idx) => (
-                <div className="flex gap-2" key={idx}>
-                  <CircleAlert className=" text-red-600 bg-red-50 rounded-full h-6 w-6" />
-                  <div className="w-full"> {recommendations}</div>
-                </div>
-              )
-            )}
-          </div>
+            <div className="my-3 flex flex-col gap-2">
+              {analysisData?.refined_recommendations.map(
+                (refined_recommendations, idx) => (
+                  <div className="flex gap-2" key={idx}>
+                    <CheckCircle className=" text-green-600 bg-green-50 rounded-full h-6 w-6" />
+                    <div className="w-full"> {refined_recommendations}</div>
+                  </div>
+                )
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-
-
-        </CardContent>
-      </Card>
+        <Card className="my-4 w-1/2">
+          <CardContent>
+            <CardTitle>Justifications</CardTitle>
+            <CardDescription className="my-2">Justifications suggested by Nexus.</CardDescription>
+            <div className="my-3 flex flex-col gap-2">
+              {analysisData?.refined_justifications.map(
+                (refined_justifications, idx) => (
+                  <div className="flex gap-2" key={idx}>
+                    <Zap color="blue" className=" text-blue-600 bg-blue-50 rounded-full h-6 w-6" />
+                    <div className="w-full"> {refined_justifications}</div>
+                  </div>
+                )
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
