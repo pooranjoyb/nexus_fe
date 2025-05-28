@@ -12,6 +12,8 @@ export interface RootResume {
   grammar_analysis: GrammarAnalysis
   justifications: string
   overall_score: number
+  refined_justifications: string[]
+  refined_recommendations: string[]
   resume_data: ResumeData
   technical_score: TechnicalScore
 }
@@ -197,6 +199,12 @@ export interface WorkExperience {
 export interface TechnicalScore {
   job_description_responsibilities: string
   justification: Justification
+  key_responsibilities_comparison: {
+    match_percentage: number
+    matched_responsibilities: string[]
+    missing_responsibilities: string[]
+    possibly_matched_responsibilities: string[]
+  }
   notes: string
   pass: boolean
   preferred_skills_found: string[]
@@ -217,7 +225,7 @@ export interface Justification {
 }
 
 export interface SectionScores2 {
-  experience_and_projects: number
+  work_experience_projects: number
   skills: number
 }
 
