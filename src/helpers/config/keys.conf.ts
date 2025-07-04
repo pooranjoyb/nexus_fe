@@ -1,1 +1,1 @@
-export const API_BASE_URL="http://4.213.3.199/api"
+export const API_BASE_URL="https://8080-01jz07jfdmghj740tmb723q7az.cloudspaces.litng.ai"

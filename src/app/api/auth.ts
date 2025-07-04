@@ -10,7 +10,7 @@ const login = async (payload: {
   password: string;
 }): Promise<User> => {
   try {
-    const { data } = await axiosInstance.post<User>("/auth/login", payload);
+    const { data } = await axiosInstance.post<User>("/users/login", payload);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -32,7 +32,7 @@ const register = async (payload: {
   password: string;
 }): Promise<User> => {
   try {
-    const { data } = await axiosInstance.post<User>("/auth/register", payload);
+    const { data } = await axiosInstance.post<User>("/users/signup", payload);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
