@@ -18,7 +18,7 @@ type CustomColumnDef<TData> = ColumnDef<TData> & {
 export default function UploadHistory() {
 
   const { user } = useAuth();
-  const { data, isFetching } = useFetchResumeQuery(user?.user?._id ?? "");
+  const { data, isFetching } = useFetchResumeQuery(Number(user?.id));
 
   const CellRenderer = <TData extends Resume, TValue>({
     info,
@@ -33,7 +33,7 @@ export default function UploadHistory() {
           {String(cellValue)}
         </Badge>
       );
-    } else if (info.column.id === "status") {
+    } else if (info.column.id === "is_active") {
       const statusValue = "AVAILABLE";
       let badgeClassName =
         "items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset";
@@ -57,7 +57,7 @@ export default function UploadHistory() {
           </Badge>
         </div>
       );
-    } 
+    }
 
     return cellValue;
   };
@@ -70,13 +70,13 @@ export default function UploadHistory() {
       size: 10,
     },
     {
-      accessorKey: "file_name",
+      accessorKey: "filename",
       header: "Filename",
       cell: (info) => <CellRenderer info={info} />,
       size: 100,
     },
     {
-      accessorKey: "uploaded_at",
+      accessorKey: "created_at",
       header: "Uploaded",
       cell: (info) => {
         const rawDate = info.getValue() as string;
@@ -96,7 +96,7 @@ export default function UploadHistory() {
       align: "center",
     },
     {
-      accessorKey: "status",
+      accessorKey: "is_active",
       header: "Status",
       cell: (info) => <CellRenderer info={info} />,
       size: 100,
@@ -106,9 +106,9 @@ export default function UploadHistory() {
 
   return (
     <div>
-        <div className="text-xl font-bold bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-600 text-transparent bg-clip-text animate-gradient drop-shadow-lg mb-5">
-          Resume History. See all previous responses here.
-        </div>
+      <div className="text-xl font-bold bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-600 text-transparent bg-clip-text animate-gradient drop-shadow-lg mb-5">
+        Resume History. See all previous responses here.
+      </div>
       <DataTable
         columns={columns}
         data={data?.list ?? []}

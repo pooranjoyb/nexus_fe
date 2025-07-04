@@ -50,7 +50,7 @@ const UploadResumeDialog: React.FC<UploadResumeDialogProps> = ({
             uploadMutation.mutate(
                 {
                     resume: selectedFile,
-                    userId: user?.user?._id ?? "",
+                    userId: String(user?.id),
                 },
                 {
                     onSuccess: () => {

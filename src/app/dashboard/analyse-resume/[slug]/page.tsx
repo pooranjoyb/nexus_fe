@@ -65,7 +65,7 @@ export default function AnalysedResumePage({
     {
       title: "Overall Score",
       description: "Needs Significant Revision",
-      data: Math.round(analysisData?.overall_score),
+      data: Math.round(analysisData?.analysis?.overall_score),
       progressColor: "stroke-blue-500",
       cardFooterLeft: "Last Scan",
       cardFooterRight: "XXXXXXXXX",
@@ -80,13 +80,13 @@ export default function AnalysedResumePage({
               5%
             </Badge>
             <span>
-              {analysisData?.technical_score?.required_skill_match_percentage}%
+              {analysisData?.analysis?.technical_score?.required_skill_match_percentage}%
               skill match
             </span>
           </div>
         ),
       },
-      data: Math.round(analysisData?.technical_score?.similarity_score),
+      data: Math.round(analysisData?.analysis?.technical_score?.similarity_score),
       progressColor: "stroke-violet-500",
       cardFooterLeft: "Target Job",
       cardFooterRight: "XXXXXXXXX",
@@ -107,10 +107,10 @@ export default function AnalysedResumePage({
           </div>
         ),
       },
-      data: Math.round(analysisData?.grammar_analysis?.score),
+      data: Math.round(analysisData?.analysis?.grammar_analysis?.score),
       progressColor: "stroke-green-500",
       cardFooterLeft: "Action Needed",
-      cardFooterRight: `${analysisData?.grammar_analysis?.recommendations?.length} recommendations`,
+      cardFooterRight: `${analysisData?.analysis?.grammar_analysis?.recommendations?.length} recommendations`,
     },
     {
       title: "Responsibility Match",
@@ -121,10 +121,10 @@ export default function AnalysedResumePage({
           </div>
         ),
       },
-      data: analysisData?.technical_score?.key_responsibilities_comparison?.match_percentage,
+      data: analysisData?.analysis?.technical_score?.key_responsibilities_comparison?.match_percentage,
       progressColor: "stroke-cyan-500",
       cardFooterLeft: "Action Needed on ",
-      cardFooterRight: `${analysisData?.technical_score?.key_responsibilities_comparison?.missing_responsibilities.length + analysisData?.technical_score?.key_responsibilities_comparison?.possibly_matched_responsibilities.length} responsibilities`,
+      cardFooterRight: `${analysisData?.analysis?.technical_score?.key_responsibilities_comparison?.missing_responsibilities.length + analysisData?.analysis?.technical_score?.key_responsibilities_comparison?.possibly_matched_responsibilities.length} responsibilities`,
     },
   ];
 
@@ -137,7 +137,7 @@ export default function AnalysedResumePage({
       },
       title: "Skills Match",
       description: "Required skills for Data Scientist",
-      score: analysisData?.technical_score?.section_scores?.skills,
+      score: analysisData?.analysis?.technical_score?.section_scores?.skills,
       // score_needed: {
       //   return: () => (
       //     <Badge variant={"secondary"} className="text-red-500 bg-red-100">
@@ -154,7 +154,7 @@ export default function AnalysedResumePage({
       },
       title: "Experience Match",
       description: "Relevance to Job Description",
-      score: Math.round(analysisData?.technical_score?.section_scores?.work_experience_projects),
+      score: Math.round(analysisData?.analysis?.technical_score?.section_scores?.work_experience_projects),
       // score_needed: {
       //   return: () => (
       //     <Badge variant={"secondary"} className="text-red-500 bg-red-100">
@@ -175,7 +175,7 @@ export default function AnalysedResumePage({
       title: "Action Verbs",
       description: "Strength of action verbs",
       score:
-        analysisData?.grammar_analysis?.section_scores?.action_verbs?.score,
+        analysisData?.analysis?.grammar_analysis?.section_scores?.action_verbs?.score,
       score_needed: {
         return: () => (
           <Badge variant={"secondary"} className="text-red-500 bg-red-100">
@@ -193,7 +193,7 @@ export default function AnalysedResumePage({
       title: "Active Voice",
       description: "Use of active voice",
       score:
-        analysisData?.grammar_analysis?.section_scores?.active_voice?.score,
+        analysisData?.analysis?.grammar_analysis?.section_scores?.active_voice?.score,
       score_needed: {
         return: () => (
           <Badge variant={"secondary"} className="text-green-500 bg-green-100">
@@ -211,7 +211,7 @@ export default function AnalysedResumePage({
       title: "Bullet Points",
       description: "Formatting of bullet points",
       score:
-        analysisData?.grammar_analysis?.section_scores?.bullet_points?.score,
+        analysisData?.analysis?.grammar_analysis?.section_scores?.bullet_points?.score,
       score_needed: {
         return: () => (
           <Badge variant={"secondary"} className="text-green-500 bg-green-100">
@@ -229,7 +229,7 @@ export default function AnalysedResumePage({
       title: "Completeness",
       description: "Essential resume sections",
       score:
-        analysisData?.grammar_analysis?.section_scores?.completeness?.score,
+        analysisData?.analysis?.grammar_analysis?.section_scores?.completeness?.score,
       score_needed: {
         return: () => (
           <Badge variant={"secondary"} className="text-green-500 bg-green-100">
@@ -247,7 +247,7 @@ export default function AnalysedResumePage({
       title: "Industry Fit",
       description: "Relevance to the target industry",
       score:
-        analysisData?.grammar_analysis?.section_scores?.industry_fit?.score,
+        analysisData?.analysis?.grammar_analysis?.section_scores?.industry_fit?.score,
       score_needed: {
         return: () => (
           <Badge
@@ -267,7 +267,7 @@ export default function AnalysedResumePage({
       },
       title: "Length",
       description: "Optimal resume length",
-      score: analysisData?.grammar_analysis?.section_scores?.length?.score,
+      score: analysisData?.analysis?.grammar_analysis?.section_scores?.length?.score,
       score_needed: {
         return: () => (
           <Badge variant={"secondary"} className="text-green-500 bg-green-100">
@@ -285,7 +285,7 @@ export default function AnalysedResumePage({
       title: "Quantifiable",
       description: "Use of quantifiable results",
       score:
-        analysisData?.grammar_analysis?.section_scores?.quantifiable?.score,
+        analysisData?.analysis?.grammar_analysis?.section_scores?.quantifiable?.score,
       score_needed: {
         return: () => (
           <Badge variant={"secondary"} className="text-green-500 bg-green-100">
@@ -303,7 +303,7 @@ export default function AnalysedResumePage({
       title: "Sentence Structure",
       description: "Clarity and conciseness of sentences",
       score:
-        analysisData?.grammar_analysis?.section_scores?.sentence_structure
+        analysisData?.analysis?.grammar_analysis?.section_scores?.sentence_structure
           ?.score,
       score_needed: {
         return: () => (
@@ -325,7 +325,7 @@ export default function AnalysedResumePage({
       title: "Skills Format",
       description: "Formatting of the skills section",
       score:
-        analysisData?.grammar_analysis?.section_scores?.skills_format?.score,
+        analysisData?.analysis?.grammar_analysis?.section_scores?.skills_format?.score,
       score_needed: {
         return: () => (
           <Badge
@@ -405,13 +405,13 @@ export default function AnalysedResumePage({
                 Match Scores
               </CardDescription>
               <CardDescription className="font-bold">
-                {analysisData?.technical_score?.required_skill_match_percentage} %
+                {analysisData?.analysis?.technical_score?.required_skill_match_percentage} %
               </CardDescription>
             </div>
             <Progress
               className="[&>div]:bg-gradient-r from-red-500 to-green-500"
               value={
-                analysisData?.technical_score?.required_skill_match_percentage
+                analysisData?.analysis?.technical_score?.required_skill_match_percentage
               }
             />
 
@@ -420,11 +420,11 @@ export default function AnalysedResumePage({
                 <div>
                   <CardDescription className="text-green-600 font-semibold my-2">
                     Matched Skills (
-                    {analysisData?.technical_score?.required_skills_found_count})
+                    {analysisData?.analysis?.technical_score?.required_skills_found_count})
                   </CardDescription>
                 </div>
                 <div>
-                  {analysisData?.technical_score?.required_skills_found.map(
+                  {analysisData?.analysis?.technical_score?.required_skills_found.map(
                     (skill, idx) => (
                       <Badge className="p-1 m-1 bg-green-100 text-green-600" key={idx}>
                         <CheckCircle2 color="#3e9392" />
@@ -438,11 +438,11 @@ export default function AnalysedResumePage({
                 <div>
                   <CardDescription className="text-red-600 font-semibold my-2">
                     Missing Skills (
-                    {analysisData?.technical_score?.required_skills_found_count})
+                    {analysisData?.analysis?.technical_score?.required_skills_found_count})
                   </CardDescription>
                 </div>
                 <div>
-                  {analysisData?.technical_score?.required_skills_missing.map(
+                  {analysisData?.analysis?.technical_score?.required_skills_missing.map(
                     (skill, idx) => (
                       <Badge className="p-1 m-1 bg-red-100 text-red-600" key={idx}>
                         <CircleXIcon color="#e7000b" />
@@ -460,7 +460,7 @@ export default function AnalysedResumePage({
             </CardTitle>
 
             <div className="mt-2 flex flex-col gap-2">
-              {analysisData?.technical_score?.key_responsibilities_comparison?.matched_responsibilities.map(
+              {analysisData?.analysis?.technical_score?.key_responsibilities_comparison?.matched_responsibilities.map(
                 (matched_responsibilities, idx) => (
                   <div className="flex gap-2 p-1 border border-green bg-green-50 rounded-md" key={idx}>
                     <CircleCheck color="green" className=" text-red-600 bg-green-50 rounded-full h-6 w-6" />
@@ -471,7 +471,7 @@ export default function AnalysedResumePage({
             </div>
 
             <div className="flex flex-col gap-2">
-              {analysisData?.technical_score?.key_responsibilities_comparison?.possibly_matched_responsibilities.map(
+              {analysisData?.analysis?.technical_score?.key_responsibilities_comparison?.possibly_matched_responsibilities.map(
                 (possibly_matched_responsibilities, idx) => (
                   <div className="flex gap-2 p-1 border border-yellow bg-yellow-50 rounded-md" key={idx}>
                     <CircleCheck color="orange" className=" text-red-600 bg-green-50 rounded-full h-6 w-6" />
@@ -482,7 +482,7 @@ export default function AnalysedResumePage({
             </div>
 
             <div className="flex flex-col gap-2">
-              {analysisData?.technical_score?.key_responsibilities_comparison?.missing_responsibilities.map(
+              {analysisData?.analysis?.technical_score?.key_responsibilities_comparison?.missing_responsibilities.map(
                 (missing_responsibilities, idx) => (
                   <div className="flex gap-2 p-1 border border-red bg-red-50 rounded-md" key={idx}>
                     <CircleX color="red" className=" text-red-600 bg-red-50 rounded-full h-6 w-6" />
@@ -496,7 +496,7 @@ export default function AnalysedResumePage({
               <CheckCircle className="bg-green-50 text-green-600 rounded-xl p-2 h-10 w-10" />
               <span className="w-full">
                 {
-                  analysisData?.technical_score?.justification
+                  analysisData?.analysis?.technical_score?.justification
                     ?.experience_and_projects
                 }
               </span>
@@ -505,7 +505,7 @@ export default function AnalysedResumePage({
               <CheckCircle className="bg-green-50 text-green-600 rounded-xl p-2 h-10 w-10" />
               <span className="w-full">
                 {
-                  analysisData?.technical_score?.justification
+                  analysisData?.analysis?.technical_score?.justification
                     .skills
                 }
               </span>
@@ -514,7 +514,7 @@ export default function AnalysedResumePage({
               <CheckCircle className="bg-green-50 text-green-600 rounded-xl p-2 h-10 w-10" />
               <span className="w-full">
                 {
-                  analysisData?.technical_score?.justification
+                  analysisData?.analysis?.technical_score?.justification
                     .overall
                 }
               </span>
@@ -524,7 +524,7 @@ export default function AnalysedResumePage({
               Job desctiption Responsibilities
             </CardTitle>
             <CardDescription>
-              {analysisData?.technical_score?.job_description_responsibilities}
+              {analysisData?.analysis?.technical_score?.job_description_responsibilities}
             </CardDescription> */}
           </CardContent>
         </Card>
@@ -537,10 +537,10 @@ export default function AnalysedResumePage({
                 variant={"secondary"}
                 className="bg-green-100 text-green-700"
               >
-                {analysisData?.technical_score?.required_skills_found_count}/{analysisData?.technical_score?.total_required_skills_in_jd} skills
+                {analysisData?.analysis?.technical_score?.required_skills_found_count}/{analysisData?.analysis?.technical_score?.total_required_skills_in_jd} skills
               </Badge>
               <Badge className="bg-blue-100 text-blue-700">
-                {analysisData?.technical_score?.section_scores?.work_experience_projects}
+                {analysisData?.analysis?.technical_score?.section_scores?.work_experience_projects}
                 % skills
               </Badge>
             </CardTitle>
@@ -589,7 +589,7 @@ export default function AnalysedResumePage({
             <CardTitle>Grammar Breakdown</CardTitle>
             <div className="flex gap-3">
               <Badge className="bg-green-100 text-green-600">
-                {analysisData?.grammar_analysis?.score}/100
+                {analysisData?.analysis?.grammar_analysis?.score}/100
               </Badge>
               <Badge className="bg-yellow-100 text-yellow-600">
                 Needs Work
@@ -643,7 +643,7 @@ export default function AnalysedResumePage({
             <CardDescription className="my-2">Recommendations suggested by Nexus.</CardDescription>
 
             <div className="my-3 flex flex-col gap-2">
-              {analysisData?.refined_recommendations.map(
+              {analysisData?.analysis?.refined_recommendations.map(
                 (refined_recommendations, idx) => (
                   <div className="flex gap-2" key={idx}>
                     <CheckCircle className=" text-green-600 bg-green-50 rounded-full h-6 w-6" />
@@ -660,7 +660,7 @@ export default function AnalysedResumePage({
             <CardTitle>Justifications</CardTitle>
             <CardDescription className="my-2">Justifications suggested by Nexus.</CardDescription>
             <div className="my-3 flex flex-col gap-2">
-              {analysisData?.refined_justifications.map(
+              {analysisData?.analysis?.refined_justifications.map(
                 (refined_justifications, idx) => (
                   <div className="flex gap-2" key={idx}>
                     <Zap color="blue" className=" text-blue-600 bg-blue-50 rounded-full h-6 w-6" />

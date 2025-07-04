@@ -27,7 +27,7 @@ export default function AnalyseResume() {
   const [uploadDialog, setUploadDialog] = useState<boolean>(false);
 
   const { user } = useAuth();
-  const { data, isFetching } = useFetchResumeQuery(user?.user?._id ?? "");
+  const { data, isFetching } = useFetchResumeQuery(Number(user?.id));
 
   const CellRenderer = <TData extends Resume, TValue>({
     info,
@@ -42,7 +42,7 @@ export default function AnalyseResume() {
           {String(cellValue)}
         </Badge>
       );
-    } else if (info.column.id === "status") {
+    } else if (info.column.id === "is_active") {
       const statusValue = "AVAILABLE";
       let badgeClassName =
         "items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset";
@@ -89,14 +89,14 @@ export default function AnalyseResume() {
       cell: (info) => <CellRenderer info={info} />,
       size: 10,
     },
-    {
-      accessorKey: "file_name",
+     {
+      accessorKey: "filename",
       header: "Filename",
       cell: (info) => <CellRenderer info={info} />,
       size: 100,
     },
     {
-      accessorKey: "uploaded_at",
+      accessorKey: "created_at",
       header: "Uploaded",
       cell: (info) => {
         const rawDate = info.getValue() as string;
@@ -116,7 +116,7 @@ export default function AnalyseResume() {
       align: "center",
     },
     {
-      accessorKey: "status",
+      accessorKey: "is_active",
       header: "Status",
       cell: (info) => <CellRenderer info={info} />,
       size: 100,

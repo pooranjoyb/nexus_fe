@@ -1,7 +1,7 @@
 export interface Resume {
   _id: string;
-  file_name: string;
-  file_path: string;
+  filename: string;
+  filepath: string;
   resume_id: string;
   status: string;
   uploaded_at: string;
@@ -9,13 +9,18 @@ export interface Resume {
 }
 
 export interface RootResume {
-  grammar_analysis: GrammarAnalysis
-  justifications: string
-  overall_score: number
-  refined_justifications: string[]
-  refined_recommendations: string[]
-  resume_data: ResumeData
-  technical_score: TechnicalScore
+  message: string;
+  analysis: {
+    grammar_analysis: GrammarAnalysis
+    justifications: string
+    overall_score: number
+    refined_justifications: string[]
+    refined_recommendations: string[]
+    resume_data: ResumeData
+    technical_score: TechnicalScore
+  };
+  analysis_id: string;
+  jd_id: string;
 }
 
 export interface GrammarAnalysis {

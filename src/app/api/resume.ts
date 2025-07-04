@@ -18,7 +18,7 @@ interface ListResumeResponse {
 interface AnalyseResumePayload {
   user_id: string;
   resume_id: string;
-  job_description: string;
+  jd: string;
 }
 
 // apis
@@ -50,7 +50,7 @@ const upload = async ({ resume, userId }: UploadPayload): Promise<Resume> => {
 
 const analyse = async (payload: AnalyseResumePayload): Promise<RootResume> => {
   try {
-    const { data } = await axiosInstance.post<RootResume>("/resumes/analyze", payload);
+    const { data } = await axiosInstance.post<RootResume>("/resumes/call-analyze", payload);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -62,10 +62,11 @@ const analyse = async (payload: AnalyseResumePayload): Promise<RootResume> => {
   }
 };
 
-const listResume = async (userId: string): Promise<ListResumeResponse> => {
+const listResume = async (userId: number): Promise<ListResumeResponse> => {
   try {
+    console.log(userId);
     const { data } = await axiosInstance.get<ListResumeResponse>(
-      `/resumes/all/${userId}`,
+      `/resumes/${userId}?limit=10&offset=0`,
       {
         headers: getHeaders(),
       }
@@ -82,7 +83,7 @@ const listResume = async (userId: string): Promise<ListResumeResponse> => {
 };
 
 // queries
-export const useFetchResumeQuery = (userId: string) => {
+export const useFetchResumeQuery = (userId: number) => {
   return useQuery({
     queryKey: ["resume"],
     queryFn: () => listResume(userId),
@@ -100,7 +101,7 @@ export const useFetchResumeDataQuery = (resumeId: string | undefined) => {
       const payload: AnalyseResumePayload = {
         user_id: '',
         resume_id: resumeId,
-        job_description: '',
+        jd: '',
       };
       return await analyse(payload);
     },

@@ -41,8 +41,8 @@ const AnalyseResumeDialog: React.FC<AnalyseResumeDialogProps> = ({
     analyseResumeMutation.mutate(
       {
         resume_id: resume?.resume_id,
-        user_id: String(user?.user?._id),
-        job_description: jobDescription,
+        user_id: String(user?.id),
+        jd: jobDescription,
       },
       {
         onSuccess: () => {
@@ -68,7 +68,7 @@ const AnalyseResumeDialog: React.FC<AnalyseResumeDialogProps> = ({
           {resume ? (
             <div className="mt-2 mb-1">
               Analyse <strong className="text-green-600">
-                {resume?.file_name ?? "Unknown File Name"}
+                {resume?.filename ?? "Unknown File Name"}
               </strong> with Nexus divine powers
             </div>
           ) : (

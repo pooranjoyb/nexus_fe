@@ -5,7 +5,7 @@ import { API_BASE_URL } from "./config/keys.conf";
 const axiosInstance = axios.create({
   baseURL: `${API_BASE_URL}/core/api/v1`,
   headers: getHeaders(),
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 export default axiosInstance;
